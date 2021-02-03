@@ -11,7 +11,7 @@ public class MessageFactory {
         //Mache ein enum aus bytes für Type1
         MessageType1 type1 = null;
         for (MessageType1 a : MessageType1.values()) {
-            if (a.getByte() == bytes[2]) {
+            if (a.getByte() == bytes[4]) {
                 type1 = a;
                 break;
             }
@@ -23,7 +23,7 @@ public class MessageFactory {
             case LOBBY:
                 MessageType2Lobby type2 = null;
                 for (MessageType2Lobby a : MessageType2Lobby.values()) {
-                    if (a.getByte() == bytes[3]) {
+                    if (a.getByte() == bytes[5]) {
                         type2 = a;
                         break;
                     }
@@ -35,7 +35,7 @@ public class MessageFactory {
             case SERVER:
                 MessageType2Server type3 = null;
                 for (MessageType2Server a : MessageType2Server.values()) {
-                    if (a.getByte() == bytes[3]) {
+                    if (a.getByte() == bytes[5]) {
                         type3 = a;
                         break;
                     }
@@ -47,7 +47,7 @@ public class MessageFactory {
             case GAME:
                 MessageType2Game type4 = null;
                 for (MessageType2Game a : MessageType2Game.values()) {
-                    if (a.getByte() == bytes[3]) {
+                    if (a.getByte() == bytes[5]) {
                         type4 = a;
                         break;
                     }
