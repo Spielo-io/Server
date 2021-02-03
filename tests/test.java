@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.Iterator;
 import java.util.Random;
 
 public class test {
@@ -49,20 +50,12 @@ class TestClient {
 			byte[] buffer = shortToByteArray(length);
 			s.write(buffer);
 			buffer = new byte[length];
-			buffer[0] = shortToByteArray(senderID)[0];
-			buffer[1] = shortToByteArray(senderID)[1];
-			buffer[2] = shortToByteArray(receiverID)[0];
-			buffer[3] = shortToByteArray(receiverID)[1];
+			
+			shortIntoByteArray(buffer, 0, senderID);
+			shortIntoByteArray(buffer, 2, receiverID);
 			buffer[4] = (byte)1;
 			buffer[5] = (byte)0;
-			buffer[6] = longToByteArray(timestamp)[0];
-			buffer[7] = longToByteArray(timestamp)[1];
-			buffer[8] = longToByteArray(timestamp)[2];
-			buffer[9] = longToByteArray(timestamp)[3];
-			buffer[10] = longToByteArray(timestamp)[4];
-			buffer[11] = longToByteArray(timestamp)[5];
-			buffer[12] = longToByteArray(timestamp)[6];
-			buffer[13] = longToByteArray(timestamp)[7];
+			longIntoByteArray(buffer, 6, timestamp);
 			
 			s.write(buffer);
 			s.flush();
@@ -88,16 +81,25 @@ class TestClient {
 		};
 	}
 	
-	private static byte[] longToByteArray(final long value) {
-		return new byte[] {
-			(byte)(value >> 56),
-			(byte)(value >> 48),
-			(byte)(value >> 40),
-			(byte)(value >> 32),
-			(byte)(value >> 24),
-			(byte)(value >> 16),
-			(byte)(value >> 8),
-			(byte)(value >> 0)
-		};
+	public static void shortIntoByteArray(final byte[] bytes, final int offset, final short value)
+	{
+		bytes[offset] = (byte)value;
+		bytes[offset + 1] = (byte)(value >> 8);
+	}
+
+	public static void intIntoByteArray(final byte[] bytes, final int offset, final short value)
+	{
+		bytes[offset] = (byte)value;
+		bytes[offset + 1] = (byte)(value >> 8);
+		bytes[offset + 2] = (byte)(value >> 16);
+		bytes[offset + 3] = (byte)(value >> 24);
+	}
+	
+	public static void longIntoByteArray(final byte[] bytes, final int offset, final long value) {
+		int shift = 0;
+		for (int i = 0; i < 8; i++) {
+			bytes[offset + i] = (byte)(value >> shift);
+			shift += 8;
+		}
 	}
 }
