@@ -1,14 +1,17 @@
 package io.spielo.tasks;
 
+import java.io.IOException;
 import java.net.ServerSocket;
+import java.net.Socket;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 
 import io.spielo.events.SocketConnectedEvent;
 
 
 public class AcceptSocketTask implements Runnable {
 
-	private final int CONNECTION_TIMEOUT = 1000;
+	private static final int CONNECTION_TIMEOUT = 2000;
 	
 	private Boolean isShutdown;
 	
@@ -22,7 +25,7 @@ public class AcceptSocketTask implements Runnable {
 		initialize();
 	}
 
-	private void initialize() {
+	private final void initialize() {
 		isShutdown = false;
 		
 		try {
@@ -32,13 +35,28 @@ public class AcceptSocketTask implements Runnable {
 		}	
 	}
 	
-	public void shutdown() {
+	public final void shutdown() {
 		this.isShutdown = true;
 	}
 	
 	@Override
-	public void run() {
+	public final void run() {
 		while (!isShutdown) {
+
+			try {
+				final Socket socket = serverSocket.accept();
+				eventHandler.onSocketConnected(socket);
+			} catch (SocketTimeoutException e) {
+				
+			}catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		try {
+			serverSocket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 }
