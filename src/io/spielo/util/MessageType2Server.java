@@ -1,11 +1,11 @@
 package io.spielo.util;
 
-public enum MessageType1 {
-    LOBBY((byte) 0), SERVER((byte) 1), GAME((byte) 2);
+public enum MessageType2Server {
+    CONNECT((byte) 0), HEARTBEAT((byte) 1), DISCONNECT((byte) 2);
 
     private final byte b;
 
-    MessageType1(byte b) {
+    MessageType2Server(byte b) {
         this.b = b;
     }
 
