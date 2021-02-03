@@ -5,9 +5,10 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 import io.spielo.events.SocketConnectedEvent;
+import io.spielo.events.SocketMessageReceived;
 import io.spielo.tasks.AcceptSocketTask;
 
-public class Server implements SocketConnectedEvent {
+public class Server implements SocketConnectedEvent, SocketMessageReceived {
 	private static final int PORT = 8123;
 
 	public static void main(String[] args) {
@@ -40,7 +41,12 @@ public class Server implements SocketConnectedEvent {
 	}
 
 	@Override
-	public void onSocketConnected(Socket socket) {
+	public final void onSocketConnected(final Socket socket) {
 		System.out.println("New client connected!");
+	}
+	
+	@Override
+	public final void onSocketReceived(final Socket socket, final byte[] bytes) {
+		
 	}
 }
