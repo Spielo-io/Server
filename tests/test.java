@@ -6,7 +6,7 @@ import java.util.Random;
 public class test {
 	
 	public static void main(String[] args) {
-		TestClient[] clients = new TestClient[10];
+		TestClient[] clients = new TestClient[1];
 		for (int i = 0; i < clients.length; i++) {
 			clients[i] = new TestClient();
 		}
