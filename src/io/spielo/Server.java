@@ -6,6 +6,8 @@ import java.net.Socket;
 
 import io.spielo.events.SocketConnectedEvent;
 import io.spielo.events.SocketMessageReceived;
+import io.spielo.messages.Message;
+import io.spielo.messages.MessageFactory;
 import io.spielo.tasks.AcceptSocketTask;
 import io.spielo.tasks.ReadMessagesTask;
 
@@ -56,5 +58,8 @@ public class Server implements SocketConnectedEvent, SocketMessageReceived {
 	
 	@Override
 	public final void onSocketReceived(final Socket socket, final byte[] bytes) {
+		MessageFactory factory = new MessageFactory();
+		Message m = factory.getMessage(bytes);
+		System.out.println(m.getSenderID());
 	}
 }
