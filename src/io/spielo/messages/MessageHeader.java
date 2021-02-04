@@ -1,13 +1,13 @@
 package io.spielo.messages;
 
 public interface MessageHeader {
-    public short getSenderID();
+    short getSenderID();
 
-    public short getReceiverID();
+    short getReceiverID();
 
-    public short getType1();
+    short getType1();
 
-    public short getType2();
+    short getType2();
 
-    public long getTimestamp();
+    long getTimestamp();
 }

@@ -1,11 +1,8 @@
 package io.spielo.messages;
 
 public class Message implements MessageHeader {
-    private short senderID;
-    private short receiverID;
-    private short type1;
-    private short type2;
-    private long timestamp;
+    private final short senderID, receiverID, type1, type2;
+    private final long timestamp;
 
     public Message(short senderID, short receiverID, short type1, short type2, long timestamp) {
         this.senderID = senderID;
@@ -43,16 +40,27 @@ public class Message implements MessageHeader {
     public static Message createMessage(byte[] bytes) {
         short senderID = byteArrayToShort(bytes, 0);
         short receiverID = byteArrayToShort(bytes, 2);
-        short type1 = byteArrayToShort(bytes, 4);
-        short type2 = byteArrayToShort(bytes, 6);
-        short timestamp = 0;
+        short type1 = bytes[4];
+        short type2 = bytes[5];
+        long timestamp = byteArrayToLong(bytes, 6);
 
 
         return new Message(senderID, receiverID, type1, type2, timestamp);
     }
 
-    private static short byteArrayToShort(byte[] buffer, int offset) {
+    protected static short byteArrayToShort(byte[] buffer, int offset) {
         return (short) ((buffer[0 + offset] & 0xFF) << 8 |
                 (buffer[1 + offset] & 0xFF) << 0);
+    }
+
+    protected static long byteArrayToLong(byte[] buffer, int offset) {
+        return (long) ((buffer[0 + offset] & 0xFF) << 0 |
+                (buffer[1 + offset] & 0xFF) << 8 |
+                (buffer[2 + offset] & 0xFF) << 16 |
+                (buffer[3 + offset] & 0xFF) << 24 |
+                (long) (buffer[4 + offset] & 0xFF) << 32 |
+                (long) (buffer[5 + offset] & 0xFF) << 40 |
+                (long) (buffer[6 + offset] & 0xFF) << 48 |
+                (long) (buffer[7 + offset] & 0xFF) << 56);
     }
 }

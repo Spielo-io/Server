@@ -1,5 +1,7 @@
 package io.spielo.tasks;
 
+import io.spielo.events.SocketMessageReceived;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
@@ -7,8 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-
-import io.spielo.events.SocketMessageReceived;
 
 public class ReadMessagesTask implements Runnable {
 
@@ -55,4 +55,5 @@ public class ReadMessagesTask implements Runnable {
 		return (short)((buffer[0 + offset] & 0xFF) << 8 | 
 					   (buffer[1 + offset] & 0xFF) << 0);
 	}
+
 }
