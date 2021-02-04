@@ -4,6 +4,8 @@ import java.net.Socket;
 import java.util.Iterator;
 import java.util.Random;
 
+import io.spielo.util.BufferHelper;
+
 public class test {
 	
 	private final static String SERVER_IP = "127.0.0.1";
@@ -47,21 +49,18 @@ class TestClient {
 		try {
 			OutputStream s = socket.getOutputStream();
 			short length = 14;
-			byte[] buffer = shortToByteArray(length);
-			s.write(buffer);
-			buffer = new byte[length];
-			
-			shortIntoByteArray(buffer, 0, senderID);
-			shortIntoByteArray(buffer, 2, receiverID);
-			buffer[4] = (byte)1;
-			buffer[5] = (byte)0;
-			longIntoByteArray(buffer, 6, timestamp);
+			byte[] buffer = new byte[length + 2];
+			BufferHelper.shortIntoBuffer(buffer, 0, length); 
+			BufferHelper.shortIntoBuffer(buffer, 2, senderID);
+			BufferHelper.shortIntoBuffer(buffer, 4, receiverID);
+			buffer[6] = (byte)1;
+			buffer[7] = (byte)0;
+			BufferHelper.longIntoBuffer(buffer, 8, timestamp);
 			
 			s.write(buffer);
 			s.flush();
 			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -71,35 +70,6 @@ class TestClient {
 			socket.close();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
-	}
-	
-	private static byte[] shortToByteArray(final short value) {
-		return new byte[] {
-			(byte)(value >> 8),
-			(byte)(value >> 0)
-		};
-	}
-	
-	public static void shortIntoByteArray(final byte[] bytes, final int offset, final short value)
-	{
-		bytes[offset] = (byte)value;
-		bytes[offset + 1] = (byte)(value >> 8);
-	}
-
-	public static void intIntoByteArray(final byte[] bytes, final int offset, final short value)
-	{
-		bytes[offset] = (byte)value;
-		bytes[offset + 1] = (byte)(value >> 8);
-		bytes[offset + 2] = (byte)(value >> 16);
-		bytes[offset + 3] = (byte)(value >> 24);
-	}
-	
-	public static void longIntoByteArray(final byte[] bytes, final int offset, final long value) {
-		int shift = 0;
-		for (int i = 0; i < 8; i++) {
-			bytes[offset + i] = (byte)(value >> shift);
-			shift += 8;
 		}
 	}
 }
