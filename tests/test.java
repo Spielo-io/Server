@@ -1,8 +1,6 @@
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.util.Iterator;
-import java.util.Random;
 
 public class test {
 	
@@ -50,16 +48,16 @@ class TestClient {
 			byte[] buffer = shortToByteArray(length);
 			s.write(buffer);
 			buffer = new byte[length];
-			
+
 			shortIntoByteArray(buffer, 0, senderID);
 			shortIntoByteArray(buffer, 2, receiverID);
-			buffer[4] = (byte)1;
-			buffer[5] = (byte)0;
+			buffer[4] = (byte) 0;
+			buffer[5] = (byte) 1;
 			longIntoByteArray(buffer, 6, timestamp);
-			
+
 			s.write(buffer);
 			s.flush();
-			
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
