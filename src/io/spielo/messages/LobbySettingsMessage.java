@@ -1,9 +1,9 @@
 package io.spielo.messages;
 
-public class GameSettingsMessage extends Message {
+public class LobbySettingsMessage extends Message {
     private final short isPubl, game, timer, bestOf;
 
-    public GameSettingsMessage(short senderID, short receiverID, short type1, short type2, long timestamp, short isPubl, short game, short timer, short bestOf) {
+    public LobbySettingsMessage(short senderID, short receiverID, short type1, short type2, long timestamp, short isPubl, short game, short timer, short bestOf) {
         super(senderID, receiverID, type1, type2, timestamp);
         this.isPubl = isPubl;
         this.game = game;
@@ -11,7 +11,7 @@ public class GameSettingsMessage extends Message {
         this.bestOf = bestOf;
     }
 
-    public static GameSettingsMessage createMessage(byte[] bytes) {
+    public static LobbySettingsMessage createMessage(byte[] bytes) {
         short isPubl = bytes[14];
         short game = bytes[15];
         short timer = bytes[16];
@@ -21,7 +21,7 @@ public class GameSettingsMessage extends Message {
         short type1 = bytes[4];
         short type2 = bytes[5];
         long timestamp = byteArrayToLong(bytes, 6);
-        return new GameSettingsMessage(senderID, receiverID, type1, type2, timestamp, isPubl, game, timer, bestOf);
+        return new LobbySettingsMessage(senderID, receiverID, type1, type2, timestamp, isPubl, game, timer, bestOf);
     }
 
     public short getIsPubl() {

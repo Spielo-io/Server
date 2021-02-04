@@ -10,7 +10,16 @@ public class MessageFactory {
         switch (type1) {
             case LOBBY:
                 MessageType2Lobby type2 = getTypeFromByte(MessageType2Lobby.class, bytes, 5);
-                return Message.createMessage(bytes);
+                switch (type2) {
+                    case CREATE:
+                        break;
+                    case SETTINGS:
+                        return LobbySettingsMessage.createMessage(bytes);
+                    case JOIN:
+                        break;
+                    default:
+                        return null;
+                }
             case SERVER:
                 MessageType2Server type3 = getTypeFromByte(MessageType2Server.class, bytes, 5);
                 return Message.createMessage(bytes);
