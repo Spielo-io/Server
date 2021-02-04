@@ -1,6 +1,6 @@
 package io.spielo.util;
 
-public enum MessageType2Server {
+public enum MessageType2Server implements GenericEnumMixin, MessageType2{
     CONNECT((byte) 0), HEARTBEAT((byte) 1), DISCONNECT((byte) 2);
 
     private final byte b;

@@ -1,6 +1,6 @@
 package io.spielo.util;
 
-public enum MessageType2Game {
+public enum MessageType2Game implements GenericEnumMixin, MessageType2{
     TEST((byte) 0);
     private final byte b;
 

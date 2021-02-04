@@ -1,63 +1,37 @@
 package io.spielo.messages;
 
-import io.spielo.util.MessageType1;
-import io.spielo.util.MessageType2Game;
-import io.spielo.util.MessageType2Lobby;
-import io.spielo.util.MessageType2Server;
+import io.spielo.util.*;
 
 public class MessageFactory {
     public Message getMessage(byte[] bytes) {
 
         //Mache ein enum aus bytes für Type1
-        MessageType1 type1 = null;
-        for (MessageType1 a : MessageType1.values()) {
-            if (a.getByte() == bytes[4]) {
-                type1 = a;
-                break;
-            }
-        }
-        if (type1 == null) {
-            throw new NullPointerException();
-        }
+        MessageType1 type1 = getTypeFromByte(MessageType1.class, bytes, 4);
         switch (type1) {
             case LOBBY:
-                MessageType2Lobby type2 = null;
-                for (MessageType2Lobby a : MessageType2Lobby.values()) {
-                    if (a.getByte() == bytes[5]) {
-                        type2 = a;
-                        break;
-                    }
-                }
-                if (type2 == null) {
-                    throw new NullPointerException();
-                }
+                MessageType2Lobby type2 = getTypeFromByte(MessageType2Lobby.class, bytes, 5);
                 return Message.createMessage(bytes);
             case SERVER:
-                MessageType2Server type3 = null;
-                for (MessageType2Server a : MessageType2Server.values()) {
-                    if (a.getByte() == bytes[5]) {
-                        type3 = a;
-                        break;
-                    }
-                }
-                if (type3 == null) {
-                    throw new NullPointerException();
-                }
+                MessageType2Server type3 = getTypeFromByte(MessageType2Server.class, bytes, 5);
                 return Message.createMessage(bytes);
             case GAME:
-                MessageType2Game type4 = null;
-                for (MessageType2Game a : MessageType2Game.values()) {
-                    if (a.getByte() == bytes[5]) {
-                        type4 = a;
-                        break;
-                    }
-                }
-                if (type4 == null) {
-                    throw new NullPointerException();
-                }
+                MessageType2Game type4 = getTypeFromByte(MessageType2Game.class, bytes, 5);
                 return Message.createMessage(bytes);
             default:
                 return null;
         }
+    }
+    public static<T extends Enum<T> & GenericEnumMixin> T getTypeFromByte(Class<T> enumClass, byte[] bytes, int offset){
+        T type = null;
+        for (T a : enumClass.getEnumConstants()) {
+            if (a.getByte() == bytes[offset]) {
+                type = a;
+                break;
+            }
+        }
+        if (type == null) {
+            throw new NullPointerException();
+        }
+        return type;
     }
 }
