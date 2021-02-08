@@ -6,8 +6,6 @@ import java.net.Socket;
 
 import io.spielo.events.SocketConnectedEvent;
 import io.spielo.events.SocketMessageReceived;
-import io.spielo.messages.Message;
-import io.spielo.messages.MessageFactory;
 import io.spielo.tasks.AcceptSocketTask;
 import io.spielo.tasks.ReadMessagesTask;
 
