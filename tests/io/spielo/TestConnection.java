@@ -11,17 +11,12 @@ public class TestConnection {
 			clients[i] = new Client(SERVER_IP);
 		}
 		
-		for (int j = 0; j < 10; j++) {
-			for (int i = 0; i < clients.length; i++) {
-				clients[i].send();
-				try {
-					Thread.sleep(10);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}	
+		for (int i = 0; i < clients.length; i++) {
+			long time = System.currentTimeMillis();
+			clients[i].send(new ConnectMessage(time));
+			System.out.println(time);
 		}
-		
+	
 		for (int i = 0; i < clients.length; i++) {
 			clients[i].close();
 		}
