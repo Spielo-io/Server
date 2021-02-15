@@ -3,10 +3,14 @@ package io.spielo;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import io.spielo.events.SocketConnectedEvent;
 import io.spielo.events.SocketMessageReceived;
 import io.spielo.tasks.AcceptSocketTask;
+import io.spielo.tasks.ConnectMessageTask;
+import io.spielo.tasks.HeartbeatTask;
 import io.spielo.tasks.ReadMessagesTask;
 
 public class Server implements SocketConnectedEvent, SocketMessageReceived {
@@ -18,13 +22,19 @@ public class Server implements SocketConnectedEvent, SocketMessageReceived {
 		server.start();
 	}
 	
+	private short ids;
+	
 	private final Thread acceptSocketsThread;
 	private final Thread receiveDataThread;
 
 	private final AcceptSocketTask acceptSocketTask;
 	private final ReadMessagesTask readMessagesTask;
 	
+	private final ExecutorService executorMessageTask;
+	
 	public Server(final int port) {
+		ids = 0;
+		
 		ServerSocket socket = createServerSocket(port);
 		
 		acceptSocketTask = new AcceptSocketTask(socket, this);
@@ -32,6 +42,8 @@ public class Server implements SocketConnectedEvent, SocketMessageReceived {
 		
 		acceptSocketsThread = new Thread(acceptSocketTask, "Accept-Socket-Thread");
 		receiveDataThread = new Thread(readMessagesTask, "Receive-Data-Thread");
+		
+		executorMessageTask = Executors.newSingleThreadExecutor();
 	}	
 	
 	public final void start() {
@@ -50,14 +62,19 @@ public class Server implements SocketConnectedEvent, SocketMessageReceived {
 
 	@Override
 	public final void onSocketConnected(final Socket socket) {
-		System.out.println("New client connected!");
-		readMessagesTask.addSocket(socket);
+		ServerClient client = new ServerClient(socket, ++ids);
+		readMessagesTask.addSocket(client);
 	}
 	
 	@Override
-	public final void onSocketReceived(final Socket socket, final byte[] bytes) {
+	public final void onSocketReceived(final ServerClient sender, final byte[] bytes) {
 		MessageFactory factory = new MessageFactory();
 		Message m = factory.getMessage(bytes);
-		System.out.println(m.getSenderID());
+		
+		if (m instanceof ConnectMessage) {
+			executorMessageTask.execute(new ConnectMessageTask(sender, m.getHeader()));
+		} else if (m instanceof HeartbeatMessage) {
+			executorMessageTask.execute(new HeartbeatTask(sender));
+		}
 	}
 }

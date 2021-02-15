@@ -2,19 +2,19 @@ package io.spielo.tasks;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import io.spielo.ServerClient;
 import io.spielo.events.SocketMessageReceived;
 import io.spielo.util.BufferHelper;
 
 public class ReadMessagesTask implements Runnable {
 
 	private final Lock lock;
-	private final List<Socket> socketsToRead;
+	private final List<ServerClient> socketsToRead;
 	private final SocketMessageReceived eventHandler;
 	
 	public ReadMessagesTask(final SocketMessageReceived eventHandler) {
@@ -23,7 +23,7 @@ public class ReadMessagesTask implements Runnable {
 		socketsToRead = new ArrayList<>(50);
 	}
 	
-	public final void addSocket(final Socket socket) {
+	public final void addSocket(final ServerClient socket) {
 		lock.lock();
 		socketsToRead.add(socket);
 		lock.unlock();
@@ -33,15 +33,15 @@ public class ReadMessagesTask implements Runnable {
 	public void run() {
 		while (true) {
 			lock.lock();
-			for (Socket socket : socketsToRead) {
+			for (ServerClient client : socketsToRead) {
 				try {
-					InputStream in = socket.getInputStream();
+					InputStream in = client.getInputStream();
 					if (in.available() >= 2) {
 						byte[] buffer = in.readNBytes(2);
 						short length = BufferHelper.fromBufferIntoShort(buffer, 0);
 						
 						buffer = in.readNBytes(length);
-						eventHandler.onSocketReceived(socket, buffer);
+						eventHandler.onSocketReceived(client, buffer);
 					}	
 					
 				} catch (IOException e) {

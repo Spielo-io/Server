@@ -6,7 +6,7 @@ public class TestConnection {
 	//private final static String SERVER_IP = "20.52.147.95";
 	
 	public static void main(String[] args) {
-		Client[] clients = new Client[10];
+		Client[] clients = new Client[1];
 		for (int i = 0; i < clients.length; i++) {
 			clients[i] = new Client(SERVER_IP);
 		}
@@ -14,7 +14,11 @@ public class TestConnection {
 		for (int i = 0; i < clients.length; i++) {
 			long time = System.currentTimeMillis();
 			clients[i].send(new ConnectMessage(time));
-			System.out.println(time);
+			try {
+				Thread.sleep(2);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 	
 		for (int i = 0; i < clients.length; i++) {

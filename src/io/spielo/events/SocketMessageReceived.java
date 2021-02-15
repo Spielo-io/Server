@@ -1,8 +1,8 @@
 package io.spielo.events;
 
-import java.net.Socket;
+import io.spielo.ServerClient;
 
 public interface SocketMessageReceived {
 
-	void onSocketReceived(final Socket socket, final byte[] bytes);
+	void onSocketReceived(final ServerClient socket, final byte[] bytes);
 }
