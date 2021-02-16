@@ -10,6 +10,7 @@ import io.spielo.events.SocketConnectedEvent;
 import io.spielo.events.SocketMessageReceived;
 import io.spielo.tasks.AcceptSocketTask;
 import io.spielo.tasks.ConnectMessageTask;
+import io.spielo.tasks.CreateLobbyTask;
 import io.spielo.tasks.HeartbeatTask;
 import io.spielo.tasks.ReadMessagesTask;
 
@@ -17,9 +18,9 @@ public class Server implements SocketConnectedEvent, SocketMessageReceived {
 	private static final int PORT = 8123;
 
 	public static void main(String[] args) {
-		System.out.println("Hello World!");
 		Server server = new Server(PORT);
 		server.start();
+		System.out.println("Server started!");
 	}
 	
 	private short ids;
@@ -75,6 +76,8 @@ public class Server implements SocketConnectedEvent, SocketMessageReceived {
 			executorMessageTask.execute(new ConnectMessageTask(sender, m.getHeader()));
 		} else if (m instanceof HeartbeatMessage) {
 			executorMessageTask.execute(new HeartbeatTask(sender));
+		} else if (m instanceof CreateLobbyMessage) {
+			executorMessageTask.execute(new CreateLobbyTask(sender, (CreateLobbyMessage) m));
 		}
 	}
 }
