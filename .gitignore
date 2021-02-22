@@ -5,3 +5,12 @@
 
 .project
 /.gradle/
+.project
+
+#Intellij
+.idea
+
+#gradle
+build
+.gradle
+!gradle-wrapper.jar
