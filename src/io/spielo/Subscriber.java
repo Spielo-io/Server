@@ -1,5 +1,6 @@
 package io.spielo;
 
+import io.spielo.client.ServerClient;
 import io.spielo.messages.Message;
 
 public interface Subscriber {

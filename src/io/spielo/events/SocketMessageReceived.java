@@ -1,6 +1,6 @@
 package io.spielo.events;
 
-import io.spielo.ServerClient;
+import io.spielo.client.ServerClient;
 
 public interface SocketMessageReceived {
 

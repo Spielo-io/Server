@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import io.spielo.ServerClient;
+import io.spielo.client.ServerClient;
 import io.spielo.events.SocketMessageReceived;
 import io.spielo.messages.util.BufferHelper;
 

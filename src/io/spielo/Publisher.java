@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import io.spielo.client.ServerClient;
 import io.spielo.messages.Message;
 
 public class Publisher {

@@ -6,6 +6,7 @@ import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import io.spielo.client.ServerClient;
 import io.spielo.events.SocketConnectedEvent;
 import io.spielo.events.SocketMessageReceived;
 import io.spielo.messages.Message;
