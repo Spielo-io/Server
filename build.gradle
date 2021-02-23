@@ -1,12 +1,14 @@
 plugins {
     id 'java'
     id('maven-publish')
-    id('java-library')
+    id 'application'
     id 'maven'
 }
 
 group 'io.spielo'
 version System.getenv("VERSION")
+
+mainClassName = 'io.spielo.Server'
 
 repositories {
     mavenCentral()
@@ -58,4 +60,18 @@ test {
     }
     reports.junitXml.destination = file("$buildDir/xml")
     reports.html.destination = file("$buildDir/html")
+}
+
+application {
+    mainClass = mainClassName
+}
+
+jar {
+    manifest {
+        attributes "Main-Class": "$mainClassName"
+    }
+
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
 }
