@@ -8,13 +8,9 @@ import java.util.concurrent.Executors;
 
 import io.spielo.events.SocketConnectedEvent;
 import io.spielo.events.SocketMessageReceived;
-import io.spielo.messages.ConnectMessage;
-import io.spielo.messages.HeartbeatMessage;
 import io.spielo.messages.Message;
 import io.spielo.messages.MessageFactory;
-import io.spielo.tasks.AcceptSocketTask;
-import io.spielo.tasks.ConnectMessageTask;
-import io.spielo.tasks.HeartbeatTask;
+import io.spielo.tasks.AcceptSocketsTask;
 import io.spielo.tasks.NotifyMessageReceived;
 import io.spielo.tasks.ReadMessagesTask;
 
@@ -34,7 +30,7 @@ public class Server implements SocketConnectedEvent, SocketMessageReceived {
 	private final Thread acceptSocketsThread;
 	private final Thread receiveDataThread;
 
-	private final AcceptSocketTask acceptSocketTask;
+	private final AcceptSocketsTask acceptSocketTask;
 	private final ReadMessagesTask readMessagesTask;
 	private final NotifyMessageReceived notifyMessageReceivedTask;
 	
@@ -43,11 +39,13 @@ public class Server implements SocketConnectedEvent, SocketMessageReceived {
 	public Server(final int port) {
 		ids = 0;
 		
+		ConnectedClientController clientController = new ConnectedClientController();
 		publisher = new Publisher();
+		publisher.subscribe(clientController);
 		
 		ServerSocket socket = createServerSocket(port);
 		
-		acceptSocketTask = new AcceptSocketTask(socket, this);
+		acceptSocketTask = new AcceptSocketsTask(socket, this);
 		readMessagesTask = new ReadMessagesTask(this);
 		notifyMessageReceivedTask = new NotifyMessageReceived(publisher);
 		
@@ -84,11 +82,5 @@ public class Server implements SocketConnectedEvent, SocketMessageReceived {
 		
 		notifyMessageReceivedTask.setParameter(sender, message);
 		executorMessageTask.execute(notifyMessageReceivedTask);
-		
-		if (message instanceof ConnectMessage) {
-			executorMessageTask.execute(new ConnectMessageTask(sender, message.getHeader()));
-		} else if (message instanceof HeartbeatMessage) {
-			executorMessageTask.execute(new HeartbeatTask(sender));
-		}
 	}
 }

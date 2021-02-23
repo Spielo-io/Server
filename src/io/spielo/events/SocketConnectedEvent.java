@@ -6,7 +6,7 @@ import java.net.Socket;
  * The {@code SocketConnectedEvent} interface should be used when you want to get notified that an new socket just 
  * connected to the server.<p>
  * @author  Marc Pfister
- * @see     io.spielo.tasks.AcceptSocketTask
+ * @see     io.spielo.tasks.AcceptSocketsTask
  */
 public interface SocketConnectedEvent {
 

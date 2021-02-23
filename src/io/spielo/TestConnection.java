@@ -4,8 +4,8 @@ import io.spielo.messages.ConnectMessage;
 
 public class TestConnection {
 	
-	//private final static String SERVER_IP = "127.0.0.1";
-	private final static String SERVER_IP = "spielo.lukesaltweather.de";
+	private final static String SERVER_IP = "127.0.0.1";
+	//private final static String SERVER_IP = "spielo.lukesaltweather.de";
 	
 	public static void main(String[] args) {
 		Client[] clients = new Client[1];

@@ -9,7 +9,7 @@ import java.net.SocketTimeoutException;
 import io.spielo.events.SocketConnectedEvent;
 
 
-public class AcceptSocketTask implements Runnable {
+public class AcceptSocketsTask implements Runnable {
 
 	private static final int CONNECTION_TIMEOUT = 2000;
 	
@@ -18,7 +18,7 @@ public class AcceptSocketTask implements Runnable {
 	private final ServerSocket serverSocket;
 	private final SocketConnectedEvent eventHandler;
 	
-	public AcceptSocketTask(final ServerSocket serverSocket, final SocketConnectedEvent eventHandler) {
+	public AcceptSocketsTask(final ServerSocket serverSocket, final SocketConnectedEvent eventHandler) {
 		this.serverSocket = serverSocket;	
 		this.eventHandler = eventHandler;
 		
