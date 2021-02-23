@@ -17,31 +17,18 @@ import io.spielo.tasks.ConnectMessageTask;
 import io.spielo.tasks.HeartbeatTask;
 import io.spielo.tasks.ReadMessagesTask;
 
-class Publisher implements Runnable {
-	void subscribe(final Subscriber s) {
-		
-	}
-
-	void unsubscribe(final Subscriber s) {
-		
-	}
-	
-	@Override
-	public void run() {
-		
-	}
-}
-
 public class Server implements SocketConnectedEvent, SocketMessageReceived {
 	private static final int PORT = 8123;
 
 	public static void main(String[] args) {
-		System.out.println("Hello World!");
 		Server server = new Server(PORT);
 		server.start();
+		System.out.println("Server started on port: " + PORT);
 	}
 	
 	private short ids;
+	
+	private final Publisher publisher;
 	
 	private final Thread acceptSocketsThread;
 	private final Thread receiveDataThread;
@@ -53,6 +40,8 @@ public class Server implements SocketConnectedEvent, SocketMessageReceived {
 	
 	public Server(final int port) {
 		ids = 0;
+		
+		publisher = new Publisher();
 		
 		ServerSocket socket = createServerSocket(port);
 		
@@ -88,11 +77,13 @@ public class Server implements SocketConnectedEvent, SocketMessageReceived {
 	@Override
 	public final void onSocketReceived(final ServerClient sender, final byte[] bytes) {
 		MessageFactory factory = new MessageFactory();
-		Message m = factory.getMessage(bytes);
+		Message message = factory.getMessage(bytes);
 		
-		if (m instanceof ConnectMessage) {
-			executorMessageTask.execute(new ConnectMessageTask(sender, m.getHeader()));
-		} else if (m instanceof HeartbeatMessage) {
+		publisher.notify(sender, message);
+		
+		if (message instanceof ConnectMessage) {
+			executorMessageTask.execute(new ConnectMessageTask(sender, message.getHeader()));
+		} else if (message instanceof HeartbeatMessage) {
 			executorMessageTask.execute(new HeartbeatTask(sender));
 		}
 	}
