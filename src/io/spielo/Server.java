@@ -8,10 +8,10 @@ import java.util.concurrent.Executors;
 
 import io.spielo.events.SocketConnectedEvent;
 import io.spielo.events.SocketMessageReceived;
-import io.spielo.tasks.AcceptSocketTask;
-import io.spielo.tasks.ConnectMessageTask;
-import io.spielo.tasks.CreateLobbyTask;
-import io.spielo.tasks.HeartbeatTask;
+import io.spielo.messages.Message;
+import io.spielo.messages.MessageFactory;
+import io.spielo.tasks.AcceptSocketsTask;
+import io.spielo.tasks.NotifyMessageReceived;
 import io.spielo.tasks.ReadMessagesTask;
 
 public class Server implements SocketConnectedEvent, SocketMessageReceived {
@@ -20,26 +20,34 @@ public class Server implements SocketConnectedEvent, SocketMessageReceived {
 	public static void main(String[] args) {
 		Server server = new Server(PORT);
 		server.start();
-		System.out.println("Server started!");
+		System.out.println("Server started on port: " + PORT);
 	}
 	
 	private short ids;
 	
+	private final Publisher publisher;
+	
 	private final Thread acceptSocketsThread;
 	private final Thread receiveDataThread;
 
-	private final AcceptSocketTask acceptSocketTask;
+	private final AcceptSocketsTask acceptSocketTask;
 	private final ReadMessagesTask readMessagesTask;
+	private final NotifyMessageReceived notifyMessageReceivedTask;
 	
 	private final ExecutorService executorMessageTask;
 	
 	public Server(final int port) {
 		ids = 0;
 		
+		ConnectedClientController clientController = new ConnectedClientController();
+		publisher = new Publisher();
+		publisher.subscribe(clientController);
+		
 		ServerSocket socket = createServerSocket(port);
 		
-		acceptSocketTask = new AcceptSocketTask(socket, this);
+		acceptSocketTask = new AcceptSocketsTask(socket, this);
 		readMessagesTask = new ReadMessagesTask(this);
+		notifyMessageReceivedTask = new NotifyMessageReceived(publisher);
 		
 		acceptSocketsThread = new Thread(acceptSocketTask, "Accept-Socket-Thread");
 		receiveDataThread = new Thread(readMessagesTask, "Receive-Data-Thread");
@@ -70,14 +78,9 @@ public class Server implements SocketConnectedEvent, SocketMessageReceived {
 	@Override
 	public final void onSocketReceived(final ServerClient sender, final byte[] bytes) {
 		MessageFactory factory = new MessageFactory();
-		Message m = factory.getMessage(bytes);
+		Message message = factory.getMessage(bytes);
 		
-		if (m instanceof ConnectMessage) {
-			executorMessageTask.execute(new ConnectMessageTask(sender, m.getHeader()));
-		} else if (m instanceof HeartbeatMessage) {
-			executorMessageTask.execute(new HeartbeatTask(sender));
-		} else if (m instanceof CreateLobbyMessage) {
-			executorMessageTask.execute(new CreateLobbyTask(sender, (CreateLobbyMessage) m));
-		}
+		notifyMessageReceivedTask.setParameter(sender, message);
+		executorMessageTask.execute(notifyMessageReceivedTask);
 	}
 }
