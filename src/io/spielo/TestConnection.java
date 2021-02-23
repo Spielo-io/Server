@@ -1,6 +1,5 @@
 package io.spielo;
 
-import java.io.InputStream;
 import java.util.Scanner;
 
 import io.spielo.client.Client;
@@ -30,6 +29,7 @@ public class TestConnection implements ClientEventSubscriber{
 		s.nextLine();
 			
 		client.close();
+		s.close();
 	}
 
 	@Override
