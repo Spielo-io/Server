@@ -1,5 +1,11 @@
 package io.spielo;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.Test;
+
+import io.spielo.messages.ConnectMessage;
+
 public class TestConnection {
 	
 	private final static String SERVER_IP = "127.0.0.1";
@@ -24,5 +30,11 @@ public class TestConnection {
 		for (int i = 0; i < clients.length; i++) {
 			clients[i].close();
 		}
+	}
+	
+
+	@Test
+	void testAddByte() {
+		assertEquals(1, 1);
 	}
 }

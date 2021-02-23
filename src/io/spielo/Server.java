@@ -8,10 +8,29 @@ import java.util.concurrent.Executors;
 
 import io.spielo.events.SocketConnectedEvent;
 import io.spielo.events.SocketMessageReceived;
+import io.spielo.messages.ConnectMessage;
+import io.spielo.messages.HeartbeatMessage;
+import io.spielo.messages.Message;
+import io.spielo.messages.MessageFactory;
 import io.spielo.tasks.AcceptSocketTask;
 import io.spielo.tasks.ConnectMessageTask;
 import io.spielo.tasks.HeartbeatTask;
 import io.spielo.tasks.ReadMessagesTask;
+
+class Publisher implements Runnable {
+	void subscribe(final Subscriber s) {
+		
+	}
+
+	void unsubscribe(final Subscriber s) {
+		
+	}
+	
+	@Override
+	public void run() {
+		
+	}
+}
 
 public class Server implements SocketConnectedEvent, SocketMessageReceived {
 	private static final int PORT = 8123;

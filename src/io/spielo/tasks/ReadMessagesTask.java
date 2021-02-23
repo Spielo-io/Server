@@ -9,7 +9,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import io.spielo.ServerClient;
 import io.spielo.events.SocketMessageReceived;
-import io.spielo.util.BufferHelper;
+import io.spielo.messages.util.BufferHelper;
 
 public class ReadMessagesTask implements Runnable {
 

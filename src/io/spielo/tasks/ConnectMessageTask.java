@@ -1,8 +1,8 @@
 package io.spielo.tasks;
 
-import io.spielo.ConnectMessage;
-import io.spielo.MessageHeader;
 import io.spielo.ServerClient;
+import io.spielo.messages.ConnectMessage;
+import io.spielo.messages.MessageHeader;
 
 public class ConnectMessageTask implements Runnable {
 
