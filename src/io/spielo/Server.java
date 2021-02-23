@@ -15,6 +15,7 @@ import io.spielo.messages.MessageFactory;
 import io.spielo.tasks.AcceptSocketTask;
 import io.spielo.tasks.ConnectMessageTask;
 import io.spielo.tasks.HeartbeatTask;
+import io.spielo.tasks.NotifyMessageReceived;
 import io.spielo.tasks.ReadMessagesTask;
 
 public class Server implements SocketConnectedEvent, SocketMessageReceived {
@@ -35,6 +36,7 @@ public class Server implements SocketConnectedEvent, SocketMessageReceived {
 
 	private final AcceptSocketTask acceptSocketTask;
 	private final ReadMessagesTask readMessagesTask;
+	private final NotifyMessageReceived notifyMessageReceivedTask;
 	
 	private final ExecutorService executorMessageTask;
 	
@@ -47,6 +49,7 @@ public class Server implements SocketConnectedEvent, SocketMessageReceived {
 		
 		acceptSocketTask = new AcceptSocketTask(socket, this);
 		readMessagesTask = new ReadMessagesTask(this);
+		notifyMessageReceivedTask = new NotifyMessageReceived(publisher);
 		
 		acceptSocketsThread = new Thread(acceptSocketTask, "Accept-Socket-Thread");
 		receiveDataThread = new Thread(readMessagesTask, "Receive-Data-Thread");
@@ -79,7 +82,8 @@ public class Server implements SocketConnectedEvent, SocketMessageReceived {
 		MessageFactory factory = new MessageFactory();
 		Message message = factory.getMessage(bytes);
 		
-		publisher.notify(sender, message);
+		notifyMessageReceivedTask.setParameter(sender, message);
+		executorMessageTask.execute(notifyMessageReceivedTask);
 		
 		if (message instanceof ConnectMessage) {
 			executorMessageTask.execute(new ConnectMessageTask(sender, message.getHeader()));

@@ -21,7 +21,7 @@ public class Publisher {
 		subscribers.add(subscriber);
 	}
 	
-	public final void notify(final ServerClient sender, final Message message) {
+	public final void notifySubscribers(final ServerClient sender, final Message message) {
 		for (Subscriber subscriber : subscribers) {
 			subscriber.onMessageReceived(sender, message);
 		}
