@@ -27,6 +27,8 @@ public class TestConnection implements ClientEventSubscriber{
 		client.connect(SERVER_IP);
 		
 		s.nextLine();
+		
+		client.createLobby(false);
 			
 		client.close();
 		s.close();
