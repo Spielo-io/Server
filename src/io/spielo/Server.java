@@ -1,11 +1,6 @@
 package io.spielo;
 
-import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
+import io.spielo.client.ServerClient;
 import io.spielo.events.SocketConnectedEvent;
 import io.spielo.events.SocketMessageReceived;
 import io.spielo.messages.Message;
@@ -13,6 +8,12 @@ import io.spielo.messages.MessageFactory;
 import io.spielo.tasks.AcceptSocketsTask;
 import io.spielo.tasks.NotifyMessageReceived;
 import io.spielo.tasks.ReadMessagesTask;
+
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Server implements SocketConnectedEvent, SocketMessageReceived {
 	private static final int PORT = 8123;

@@ -1,5 +1,6 @@
 package io.spielo;
 
+import io.spielo.client.Client;
 import io.spielo.messages.ConnectMessage;
 
 public class TestConnection {

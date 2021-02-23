@@ -1,7 +1,7 @@
 package io.spielo.tasks;
 
 import io.spielo.Publisher;
-import io.spielo.ServerClient;
+import io.spielo.client.ServerClient;
 import io.spielo.messages.Message;
 
 public class NotifyMessageReceived implements Runnable {

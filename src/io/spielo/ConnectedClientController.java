@@ -1,5 +1,6 @@
 package io.spielo;
 
+import io.spielo.client.ServerClient;
 import io.spielo.messages.ConnectMessage;
 import io.spielo.messages.HeartbeatMessage;
 import io.spielo.messages.Message;
@@ -29,6 +30,6 @@ public class ConnectedClientController implements Subscriber{
 	}
 
 	private final void onHeartbeatReceived(final ServerClient sender, final HeartbeatMessage message) {
-		sender.setLastHeatbeat(System.currentTimeMillis());
+		sender.setLastHeartbeat(System.currentTimeMillis());
 	}
 }
