@@ -1,17 +1,16 @@
 package io.spielo;
 
-import java.util.Scanner;
-
 import io.spielo.client.Client;
 import io.spielo.client.events.ClientEventSubscriber;
-import io.spielo.messages.CreateLobbyMessage;
-import io.spielo.messages.CreateLobbyResponseMessage;
+import io.spielo.messages.lobby.CreateLobbyResponseMessage;
 import io.spielo.messages.Message;
 import io.spielo.messages.lobbysettings.LobbyBestOf;
 import io.spielo.messages.lobbysettings.LobbyGame;
 import io.spielo.messages.lobbysettings.LobbyTimer;
 
-public class TestConnection implements ClientEventSubscriber {
+import java.util.Scanner;
+
+public class TestConnection implements ClientEventSubscriber{
 	
 	private final static String SERVER_IP = "127.0.0.1";
 	//private final static String SERVER_IP = "spielo.lukesaltweather.de";
@@ -63,8 +62,8 @@ public class TestConnection implements ClientEventSubscriber {
 
 	@Override
 	public void onMessageReceived(Message message) {
-		if (message instanceof CreateLobbyMessage) {
-			CreateLobbyMessage msg = (CreateLobbyMessage) message;
+		if(message instanceof CreateLobbyResponseMessage) {
+			System.out.println(message.toString());
 		}
 	}
 }
