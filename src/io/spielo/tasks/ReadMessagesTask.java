@@ -29,6 +29,17 @@ public class ReadMessagesTask implements Runnable {
 		lock.unlock();
 	}
 	
+	public final void removeSocket(final ServerClient socket) {
+		lock.lock();
+		for (int i = 0; i < socketsToRead.size(); i++) {
+			if (socket == socketsToRead.get(i)) {
+				socketsToRead.remove(i);
+				return;
+			}
+		}
+		lock.unlock();
+	}
+	
 	@Override
 	public void run() {
 		while (true) {
