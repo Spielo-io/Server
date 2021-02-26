@@ -5,6 +5,9 @@ import java.util.Scanner;
 import io.spielo.client.Client;
 import io.spielo.client.events.ClientEventSubscriber;
 import io.spielo.messages.Message;
+import io.spielo.messages.lobbysettings.LobbyBestOf;
+import io.spielo.messages.lobbysettings.LobbyGame;
+import io.spielo.messages.lobbysettings.LobbyTimer;
 
 public class TestConnection implements ClientEventSubscriber{
 	
@@ -28,7 +31,7 @@ public class TestConnection implements ClientEventSubscriber{
 		
 		s.nextLine();
 		
-		client.createLobby(false);
+		client.createLobby(false, LobbyGame.TicTacToe, LobbyBestOf.BestOf_3, LobbyTimer.Minute_3);
 			
 		client.close();
 		s.close();
