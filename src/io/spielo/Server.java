@@ -42,6 +42,8 @@ public class Server implements SocketConnectedEvent, SocketMessageReceived {
 		
 		ConnectedClientController clientController = new ConnectedClientController();
 		publisher = new Publisher();
+		LobbyController lobbyController = new LobbyController();
+		publisher.subscribe(lobbyController);
 		publisher.subscribe(clientController);
 		
 		ServerSocket socket = createServerSocket(port);
