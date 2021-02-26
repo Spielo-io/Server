@@ -1,7 +1,9 @@
 package io.spielo;
 
 import io.spielo.client.ServerClient;
-import io.spielo.messages.*;
+import io.spielo.messages.Message;
+import io.spielo.messages.MessageHeader;
+import io.spielo.messages.lobby.*;
 import io.spielo.messages.types.MessageType1;
 import io.spielo.messages.types.MessageType2Lobby;
 
@@ -26,7 +28,7 @@ public class LobbyController implements Subscriber{
             this.handleJoinLobbyMsg(sender, (JoinLobbyMessage) message);
         }
         else {
-            this.handleGameMessage(sender, message);
+            System.out.println(message.getClass());
         }
     }
 
@@ -47,12 +49,12 @@ public class LobbyController implements Subscriber{
     public void handleJoinLobbyMsg(ServerClient sender, JoinLobbyMessage message) {
         Lobby lobby = codeLobbyMap.get(message.getCode());
         if(lobby == null){
-            sender.send(new JoinLobbyResponseMessage(sender.getID(), 0)); //failed
+            sender.send(new JoinLobbyResponseMessage(sender.getID(), JoinLobbyResponseCode.Failed, "")); //failed
             return;
         }
         lobby.onPlayerJoin(sender);
         idLobbyMap.put(sender.getID(), lobby);
-        sender.send(new JoinLobbyResponseMessage(sender.getID(), 1)); //success
+        sender.send(new JoinLobbyResponseMessage(sender.getID(), JoinLobbyResponseCode.Success, message.getDisplayName())); //success
     }
 
     public void handleGameMessage(ServerClient sender, Message message) {

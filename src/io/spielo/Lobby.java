@@ -1,8 +1,11 @@
 package io.spielo;
 
 import io.spielo.client.ServerClient;
-import io.spielo.messages.CreateLobbyMessage;
+import io.spielo.messages.lobby.CreateLobbyMessage;
 import io.spielo.messages.Message;
+import io.spielo.messages.lobbysettings.LobbyBestOf;
+import io.spielo.messages.lobbysettings.LobbyGame;
+import io.spielo.messages.lobbysettings.LobbyTimer;
 
 import java.util.Random;
 
@@ -11,9 +14,9 @@ public class Lobby {
     private ServerClient player2;
     private String code;
     private Boolean isPublic;
-    private byte game;
-    private byte timer;
-    private byte bestOf;
+    private LobbyGame game;
+    private LobbyTimer timer;
+    private LobbyBestOf bestOf;
 
     public Lobby(ServerClient host, CreateLobbyMessage message) {
         this.host = host;
