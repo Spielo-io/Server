@@ -29,10 +29,12 @@ public class TestConnection implements ClientEventSubscriber{
 		Client client = new Client();
 		client.subscribe(this);
 		client.connect(SERVER_IP);
-		
+
+		client.createLobby(false, LobbyGame.TicTacToe, LobbyBestOf.BestOf_3, LobbyTimer.Minute_3, "lukesalt");
+
 		s.nextLine();
 		
-		client.createLobby(false, LobbyGame.TicTacToe, LobbyBestOf.BestOf_3, LobbyTimer.Minute_3);
+
 		
 		/*
 		 * game5Win(int i)
