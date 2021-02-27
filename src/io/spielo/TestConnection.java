@@ -5,7 +5,6 @@ import java.util.Scanner;
 import io.spielo.client.Client;
 import io.spielo.client.events.ClientEventSubscriber;
 import io.spielo.messages.CreateLobbyMessage;
-import io.spielo.messages.CreateLobbyResponseMessage;
 import io.spielo.messages.Message;
 import io.spielo.messages.lobbysettings.LobbyBestOf;
 import io.spielo.messages.lobbysettings.LobbyGame;
@@ -34,24 +33,6 @@ public class TestConnection implements ClientEventSubscriber {
 		s.nextLine();
 		
 		client.createLobby(false, LobbyGame.TicTacToe, LobbyBestOf.BestOf_3, LobbyTimer.Minute_3);
-		
-		/*
-		 * game5Win(int i)
-		 * gameTicTacToe(int i)
-		 * createLobby(isPublic, LobbyGame, BestOf, LobbyTimer, string username)
-		 * lobbySettings(isPublic, LobbyGame, BestOf, LobbyTimer)
-		 * joinRandomLobby(string username)
-		 * joinLobby(string username, String code)
-		 * isReady(bool is)
-		 *
-		 * LobbyListMessage
-		 * Message4Wins
-		 * MessageTicTacToe
-		 * MessageLobbyJoined
-		 * MessageLobbyLeaved
-		 * LobbySettingsMessage
-		 * GameStartMessage
-		 */
 			
 		client.close();
 		s.close();
@@ -64,7 +45,6 @@ public class TestConnection implements ClientEventSubscriber {
 	@Override
 	public void onMessageReceived(Message message) {
 		if (message instanceof CreateLobbyMessage) {
-			CreateLobbyMessage msg = (CreateLobbyMessage) message;
 		}
 	}
 }
