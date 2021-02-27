@@ -33,24 +33,6 @@ public class TestConnection implements ClientEventSubscriber{
 		s.nextLine();
 		
 		client.createLobby(false, LobbyGame.TicTacToe, LobbyBestOf.BestOf_3, LobbyTimer.Minute_3);
-		
-		/*
-		 * game5Win(int i)
-		 * gameTicTacToe(int i)
-		 * createLobby(isPublic, LobbyGame, BestOf, LobbyTimer, string username)
-		 * lobbySettings(isPublic, LobbyGame, BestOf, LobbyTimer)
-		 * joinRandomLobby(string username)
-		 * joinLobby(string username, String code)
-		 * isReady(bool is)
-		 *
-		 * LobbyListMessage
-		 * Message4Wins
-		 * MessageTicTacToe
-		 * MessageLobbyJoined
-		 * MessageLobbyLeaved
-		 * LobbySettingsMessage
-		 * GameStartMessage
-		 */
 			
 		client.close();
 		s.close();
