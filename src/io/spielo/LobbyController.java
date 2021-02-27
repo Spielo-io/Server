@@ -3,6 +3,8 @@ package io.spielo;
 import io.spielo.client.ServerClient;
 import io.spielo.messages.Message;
 import io.spielo.messages.MessageHeader;
+import io.spielo.messages.games.TicTacToeMessage;
+import io.spielo.messages.games.Win4Message;
 import io.spielo.messages.lobby.*;
 import io.spielo.messages.types.MessageType1;
 import io.spielo.messages.types.MessageType2Lobby;
@@ -27,8 +29,11 @@ public class LobbyController implements Subscriber{
         else if(message instanceof JoinLobbyMessage) {
             this.handleJoinLobbyMsg(sender, (JoinLobbyMessage) message);
         }
-        else {
-            System.out.println(message.getClass());
+        else if(message instanceof LobbySettingsMessage){
+            this.handleSettingsMessage(sender, message);
+        }
+        else if(message instanceof TicTacToeMessage || message instanceof Win4Message){
+            this.handleGameMessage(sender, message);
         }
     }
 
@@ -42,7 +47,7 @@ public class LobbyController implements Subscriber{
         String code = lobby.generateRandomCode();
         codeLobbyMap.put(code, lobby);
         idLobbyMap.put(sender.getID(), lobby);
-        MessageHeader header = new MessageHeader((short)0, sender.getID(), MessageType1.LOBBY, MessageType2Lobby.JOINRESPONSE, System.currentTimeMillis());
+        MessageHeader header = new MessageHeader((short)0, sender.getID(), MessageType1.LOBBY, MessageType2Lobby.CREATERESPONSE, System.currentTimeMillis());
         sender.send(new CreateLobbyResponseMessage(header, code));
     }
 
@@ -54,12 +59,19 @@ public class LobbyController implements Subscriber{
         }
         lobby.onPlayerJoin(sender);
         idLobbyMap.put(sender.getID(), lobby);
-        sender.send(new JoinLobbyResponseMessage(sender.getID(), JoinLobbyResponseCode.Success, message.getDisplayName())); //success
+        sender.send(new JoinLobbyResponseMessage(sender.getID(), JoinLobbyResponseCode.Success, lobby.getHostName())); //success
+        lobby.getHost().send(new JoinLobbyResponseMessage(lobby.getHost().getID(), JoinLobbyResponseCode.OtherPlayerJoined, message.getDisplayName()));
     }
 
     public void handleGameMessage(ServerClient sender, Message message) {
         Lobby lobby = idLobbyMap.get(message.getHeader().getReceiverID());
         lobby.sendOtherPlayer(sender.getID(), message);
+    }
+
+    public void handleSettingsMessage(ServerClient client, Message m){
+        LobbySettingsMessage message = (LobbySettingsMessage) m;
+        Lobby lobby = idLobbyMap.get(client.getID());
+        lobby.editLobby(message);
     }
 
 }

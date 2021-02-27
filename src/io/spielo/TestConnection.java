@@ -2,8 +2,9 @@ package io.spielo;
 
 import io.spielo.client.Client;
 import io.spielo.client.events.ClientEventSubscriber;
-import io.spielo.messages.lobby.CreateLobbyResponseMessage;
 import io.spielo.messages.Message;
+import io.spielo.messages.lobby.CreateLobbyResponseMessage;
+import io.spielo.messages.lobby.JoinLobbyResponseMessage;
 import io.spielo.messages.lobbysettings.LobbyBestOf;
 import io.spielo.messages.lobbysettings.LobbyGame;
 import io.spielo.messages.lobbysettings.LobbyTimer;
@@ -30,31 +31,22 @@ public class TestConnection implements ClientEventSubscriber{
 		client.subscribe(this);
 		client.connect(SERVER_IP);
 
+		s.nextLine();
+
 		client.createLobby(false, LobbyGame.TicTacToe, LobbyBestOf.BestOf_3, LobbyTimer.Minute_3, "lukesalt");
 
 		s.nextLine();
-		
 
-		
-		/*
-		 * game5Win(int i)
-		 * gameTicTacToe(int i)
-		 * createLobby(isPublic, LobbyGame, BestOf, LobbyTimer, string username)
-		 * lobbySettings(isPublic, LobbyGame, BestOf, LobbyTimer)
-		 * joinRandomLobby(string username)
-		 * joinLobby(string username, String code)
-		 * isReady(bool is)
-		 *
-		 * LobbyListMessage
-		 * Message4Wins
-		 * MessageTicTacToe
-		 * MessageLobbyJoined
-		 * MessageLobbyLeaved
-		 * LobbySettingsMessage
-		 * GameStartMessage
-		 */
-			
+		Client client2 = new Client();
+		client2.subscribe(new Subscriber2());
+		client2.connect(SERVER_IP);
+
+		client2.joinLobby("lukesalt Client 2", s.nextLine());
+
+		s.nextLine();
+
 		client.close();
+		client2.close();
 		s.close();
 	}
 
@@ -65,7 +57,25 @@ public class TestConnection implements ClientEventSubscriber{
 	@Override
 	public void onMessageReceived(Message message) {
 		if(message instanceof CreateLobbyResponseMessage) {
-			System.out.println(message.toString());
+			System.out.println(((CreateLobbyResponseMessage) message).getCode());
 		}
+		if(message instanceof JoinLobbyResponseMessage){
+			System.out.println("JoinLobbyResponse Client 1"+((JoinLobbyResponseMessage) message).getPlayerName()+" "+((JoinLobbyResponseMessage) message).getResponseCode());
+		}
+	}
+}
+class Subscriber2 implements ClientEventSubscriber{
+
+	@Override
+	public void onMessageReceived(Message message) {
+		System.out.println("Client 2 empfangen");
+		if(message instanceof JoinLobbyResponseMessage){
+			System.out.println("JoinLobbyResponse Client 2"+((JoinLobbyResponseMessage) message).getPlayerName()+" "+((JoinLobbyResponseMessage) message).getResponseCode());
+		}
+	}
+
+	@Override
+	public void onDisconnect() {
+
 	}
 }
