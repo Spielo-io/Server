@@ -1,15 +1,15 @@
 package io.spielo.tasks;
 
+import io.spielo.client.ServerClient;
+import io.spielo.events.SocketMessageReceived;
+import io.spielo.messages.util.BufferHelper;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-
-import io.spielo.client.ServerClient;
-import io.spielo.events.SocketMessageReceived;
-import io.spielo.messages.util.BufferHelper;
 
 public class ReadMessagesTask implements Runnable {
 
