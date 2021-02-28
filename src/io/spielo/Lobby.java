@@ -1,12 +1,10 @@
 package io.spielo;
 
 import io.spielo.client.ServerClient;
-import io.spielo.messages.lobby.CreateLobbyMessage;
 import io.spielo.messages.Message;
+import io.spielo.messages.lobby.CreateLobbyMessage;
 import io.spielo.messages.lobby.LobbySettingsMessage;
-import io.spielo.messages.lobbysettings.LobbyBestOf;
-import io.spielo.messages.lobbysettings.LobbyGame;
-import io.spielo.messages.lobbysettings.LobbyTimer;
+import io.spielo.messages.lobbysettings.LobbySettings;
 
 import java.util.Random;
 
@@ -16,18 +14,12 @@ public class Lobby {
     private String player2Name;
     private ServerClient player2;
     private String code;
-    private Boolean isPublic;
-    private LobbyGame game;
-    private LobbyTimer timer;
-    private LobbyBestOf bestOf;
+    private LobbySettings lobbySettings;
 
     public Lobby(ServerClient host, CreateLobbyMessage message) {
         this.host = host;
         this.hostName = message.getUsername();
-        this.isPublic = message.getLobbySettings().getPublic();
-        this.game = message.getLobbySettings().getGame();
-        this.timer = message.getLobbySettings().getTimer();
-        this.bestOf = message.getLobbySettings().getBestOf();
+        this.lobbySettings = message.getLobbySettings();
     }
 
     public void onPlayerJoin(ServerClient player){
@@ -56,10 +48,7 @@ public class Lobby {
     }
 
     public void editLobby(LobbySettingsMessage msg){
-        this.bestOf = msg.getSettings().getBestOf();
-        this.isPublic = msg.getSettings().getPublic();
-        this.timer = msg.getSettings().getTimer();
-        this.game = msg.getSettings().getGame();
+        this.lobbySettings = msg.getSettings();
     }
 
     public String getCode() {
@@ -74,20 +63,8 @@ public class Lobby {
         return player2;
     }
 
-    public Boolean getPublic() {
-        return isPublic;
-    }
-
-    public LobbyGame getGame() {
-        return game;
-    }
-
-    public LobbyTimer getTimer() {
-        return timer;
-    }
-
-    public LobbyBestOf getBestOf() {
-        return bestOf;
+    public LobbySettings getLobbySettings() {
+        return lobbySettings;
     }
 
     public String getHostName() {
