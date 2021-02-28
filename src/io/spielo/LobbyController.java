@@ -44,7 +44,10 @@ public class LobbyController implements Subscriber{
 
     public void handleCreateLobbyMsg(ServerClient sender, CreateLobbyMessage message) {
         Lobby lobby = new Lobby(sender, message);
-        String code = lobby.generateRandomCode();
+        String code = null;
+        do {
+            code = lobby.generateRandomCode();
+        } while (codeLobbyMap.get(code) != null);
         codeLobbyMap.put(code, lobby);
         idLobbyMap.put(sender.getID(), lobby);
         MessageHeader header = new MessageHeader((short)0, sender.getID(), MessageType1.LOBBY, MessageType2Lobby.CREATERESPONSE, System.currentTimeMillis());

@@ -35,8 +35,8 @@ public class Lobby {
     }
 
     public String generateRandomCode() {
-        int leftLimit = 97; // letter 'a'
-        int rightLimit = 122; // letter 'z'
+        int leftLimit = 'a'; // letter 'a'
+        int rightLimit = 'z'; // letter 'z'
         int targetStringLength = 6;
         Random random = new Random();
 
