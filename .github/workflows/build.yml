@@ -22,3 +22,9 @@ jobs:
         run: ./gradlew -x test build
       - name: Run Unit Tests
         run: ./gradlew test
+      - name: Upload Server Jar
+        uses: actions/upload-artifact@v2
+        with:
+          name: Application Jar
+          path: |
+            build/libs/Server.jar

@@ -3,6 +3,7 @@ plugins {
     id('maven-publish')
     id 'application'
     id 'maven'
+    id 'jacoco'
 }
 
 group 'io.spielo'
@@ -65,8 +66,18 @@ test {
     filter {
         includeTestsMatching "io.spielo.*"
     }
-    reports.junitXml.destination = file("$buildDir/xml")
-    reports.html.destination = file("$buildDir/html")
+    reports.junitXml.destination = file("$buildDir/reports/JUnit/xml")
+    reports.html.destination = file("$buildDir/reports/JUnit")
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    dependsOn test // tests are required to run before generating the report
+    reports {
+        xml.enabled false
+        csv.enabled false
+        html.destination file("${buildDir}/reports/jacocoHtml")
+    }
 }
 
 application {
