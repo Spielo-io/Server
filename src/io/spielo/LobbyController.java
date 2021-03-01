@@ -77,14 +77,16 @@ public class LobbyController implements Subscriber{
     }
 
     public void handleGameMessage(ServerClient sender, Message message) {
-        Lobby lobby = idLobbyMap.get(message.getHeader().getReceiverID());
-        lobby.sendOtherPlayer(sender.getID(), message);
+        Lobby lobby = idLobbyMap.get(message.getHeader().getSenderID());
+        if (lobby != null)
+        	lobby.sendOtherPlayer(sender.getID(), message);
     }
 
     public void handleSettingsMessage(ServerClient client, Message m){
         LobbySettingsMessage message = (LobbySettingsMessage) m;
         Lobby lobby = idLobbyMap.get(client.getID());
         lobby.editLobby(message);
+        lobby.sendOtherPlayer(client.getID(), message);
     }
 
     public void handleLobbyListRequest(ServerClient client, Message m) {

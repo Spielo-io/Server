@@ -40,7 +40,8 @@ public class Lobby {
     }
     public void sendOtherPlayer(short sender, Message message) {
         if(sender == host.getID()){
-            player2.send(message);
+        	if (player2 != null)
+        		player2.send(message);
         }
         else {
             host.send(message);
