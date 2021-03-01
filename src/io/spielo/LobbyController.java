@@ -33,7 +33,7 @@ public class LobbyController implements Subscriber{
         else if(message instanceof LobbySettingsMessage){
             this.handleSettingsMessage(sender, message);
         }
-        else if(message instanceof TicTacToeMessage || message instanceof Win4Message){
+        else if(message instanceof TicTacToeMessage || message instanceof Win4Message || message instanceof ReadyToPlayMessage){
             this.handleGameMessage(sender, message);
         }
         else if(message instanceof LobbyListRequestMessage){
