@@ -10,6 +10,7 @@ import io.spielo.messages.types.MessageType1;
 import io.spielo.messages.types.MessageType2Lobby;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class LobbyController implements Subscriber{
 
@@ -34,6 +35,9 @@ public class LobbyController implements Subscriber{
         }
         else if(message instanceof TicTacToeMessage || message instanceof Win4Message){
             this.handleGameMessage(sender, message);
+        }
+        else if(message instanceof LobbyListRequestMessage){
+            this.handleLobbyListRequest(sender, message);
         }
     }
 
@@ -62,8 +66,14 @@ public class LobbyController implements Subscriber{
         }
         lobby.onPlayerJoin(sender);
         idLobbyMap.put(sender.getID(), lobby);
+
+        //Send Responses to Player2 and Host
         sender.send(new JoinLobbyResponseMessage(sender.getID(), JoinLobbyResponseCode.Success, lobby.getHostName())); //success
         lobby.getHost().send(new JoinLobbyResponseMessage(lobby.getHost().getID(), JoinLobbyResponseCode.OtherPlayerJoined, message.getDisplayName()));
+
+        //Send Lobby Settings to Player 2
+        MessageHeader header = new MessageHeader((short)0, sender.getID(), MessageType1.LOBBY, MessageType2Lobby.SETTINGS, System.currentTimeMillis());
+        sender.send(new LobbySettingsMessage(header, lobby.getLobbySettings()));
     }
 
     public void handleGameMessage(ServerClient sender, Message message) {
@@ -75,6 +85,15 @@ public class LobbyController implements Subscriber{
         LobbySettingsMessage message = (LobbySettingsMessage) m;
         Lobby lobby = idLobbyMap.get(client.getID());
         lobby.editLobby(message);
+    }
+
+    public void handleLobbyListRequest(ServerClient client, Message m) {
+        MessageHeader header = new MessageHeader((short)0, client.getID(), MessageType1.LOBBY, MessageType2Lobby.SETTINGS, System.currentTimeMillis());
+        PublicLobbyListMessage list = new PublicLobbyListMessage(header, codeLobbyMap.size());
+        for(Map.Entry<String, Lobby> pair : codeLobbyMap.entrySet()){
+            list.addLobby(pair.getValue().getLobbySettings(), pair.getKey(), pair.getValue().getHostName());
+        }
+        client.send(list);
     }
 
 }
