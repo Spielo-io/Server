@@ -90,7 +90,7 @@ public class LobbyController implements Subscriber{
     }
 
     public void handleLobbyListRequest(ServerClient client, Message m) {
-        MessageHeader header = new MessageHeader((short)0, client.getID(), MessageType1.LOBBY, MessageType2Lobby.SETTINGS, System.currentTimeMillis());
+        MessageHeader header = new MessageHeader((short)0, client.getID(), MessageType1.LOBBY, MessageType2Lobby.LOBBY_LIST, System.currentTimeMillis());
         PublicLobbyListMessage list = new PublicLobbyListMessage(header, codeLobbyMap.size());
         for(Map.Entry<String, Lobby> pair : codeLobbyMap.entrySet()){
             list.addLobby(pair.getValue().getLobbySettings(), pair.getKey(), pair.getValue().getHostName());
