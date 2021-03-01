@@ -1,8 +1,8 @@
 package io.spielo;
 
 import io.spielo.client.ServerClient;
-import io.spielo.messages.ConnectMessage;
-import io.spielo.messages.HeartbeatMessage;
+import io.spielo.messages.server.ConnectMessage;
+import io.spielo.messages.server.HeartbeatMessage;
 import io.spielo.messages.Message;
 
 public class ConnectedClientController implements Subscriber{
