@@ -6,6 +6,7 @@ import io.spielo.messages.lobby.CreateLobbyMessage;
 import io.spielo.messages.lobby.LobbySettingsMessage;
 import io.spielo.messages.lobbysettings.LobbySettings;
 
+import java.util.Map;
 import java.util.Random;
 
 public class Lobby {
@@ -45,6 +46,18 @@ public class Lobby {
         }
         else {
             host.send(message);
+        }
+    }
+
+    public void leave(ServerClient sender, Map<String, Lobby> map){
+        if(sender.getID() == host.getID()){
+            host = player2;
+            hostName = player2Name;
+            player2 = null;
+            player2Name = null;
+        }
+        else if(player2 == null){
+            map.remove(this.code);
         }
     }
 

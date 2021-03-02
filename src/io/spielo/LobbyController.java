@@ -39,6 +39,9 @@ public class LobbyController implements Subscriber{
         else if(message instanceof LobbyListRequestMessage){
             this.handleLobbyListRequest(sender, message);
         }
+        else if(message instanceof LeaveLobbyMessage){
+            this.handleLeaveMessage(sender, message);
+        }
     }
 
     @Override
@@ -96,6 +99,12 @@ public class LobbyController implements Subscriber{
             list.addLobby(pair.getValue().getLobbySettings(), pair.getKey(), pair.getValue().getHostName());
         }
         client.send(list);
+    }
+
+    public void handleLeaveMessage(ServerClient client, Message m){
+        Lobby l = idLobbyMap.get(client.getID());
+        idLobbyMap.remove(client.getID());
+        l.leave(client, codeLobbyMap);
     }
 
 }
