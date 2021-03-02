@@ -40,6 +40,7 @@ public class LobbyController implements Subscriber{
             this.handleLobbyListRequest(sender, message);
         }
         else if(message instanceof LeaveLobbyMessage){
+            System.out.println("Test");
             this.handleLeaveMessage(sender, message);
         }
     }
@@ -75,7 +76,7 @@ public class LobbyController implements Subscriber{
             lobby = codeLobbyMap.get(message.getCode());
 		}
         if(lobby == null){
-            sender.send(new JoinLobbyResponseMessage(sender.getID(), JoinLobbyResponseCode.Failed, "")); //failed
+            sender.send(new JoinLobbyResponseMessage(sender.getID(), JoinLobbyResponseCode.Failed, "\0")); //failed
             return;
         }
         lobby.onPlayerJoin(sender, message.getDisplayName());
@@ -119,6 +120,7 @@ public class LobbyController implements Subscriber{
         idLobbyMap.remove(client.getID());
         l.sendOtherPlayer(client.getID(), m);
         l.leave(client, codeLobbyMap);
+        System.out.println(l.getHostName()+" test");
     }
 
 }
