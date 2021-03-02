@@ -62,7 +62,18 @@ public class LobbyController implements Subscriber{
     }
 
     public void handleJoinLobbyMsg(ServerClient sender, JoinLobbyMessage message) {
-        Lobby lobby = codeLobbyMap.get(message.getCode());
+    	Lobby lobby = null;
+    	// If is null, join random lobby
+    	if (message.getCode() == null) {
+		    for (Lobby lobbyInMap : codeLobbyMap.values()) {
+				if (lobbyInMap.getLobbySettings().getPublic() && lobbyInMap.getPlayer2() == null) {
+					lobby = lobbyInMap;
+					break;
+				}
+			}
+		} else {
+            lobby = codeLobbyMap.get(message.getCode());
+		}
         if(lobby == null){
             sender.send(new JoinLobbyResponseMessage(sender.getID(), JoinLobbyResponseCode.Failed, "")); //failed
             return;
@@ -76,7 +87,7 @@ public class LobbyController implements Subscriber{
 
         //Send Lobby Settings to Player 2
         MessageHeader header = new MessageHeader((short)0, sender.getID(), MessageType1.LOBBY, MessageType2Lobby.SETTINGS, System.currentTimeMillis());
-        sender.send(new LobbySettingsMessage(header, lobby.getLobbySettings()));
+        sender.send(new LobbySettingsMessage(header, lobby.getLobbySettings()));    		
     }
 
     public void handleGameMessage(ServerClient sender, Message message) {
@@ -96,7 +107,8 @@ public class LobbyController implements Subscriber{
         MessageHeader header = new MessageHeader((short)0, client.getID(), MessageType1.LOBBY, MessageType2Lobby.LOBBY_LIST, System.currentTimeMillis());
         PublicLobbyListMessage list = new PublicLobbyListMessage(header, codeLobbyMap.size());
         for(Map.Entry<String, Lobby> pair : codeLobbyMap.entrySet()){
-            list.addLobby(pair.getValue().getLobbySettings(), pair.getKey(), pair.getValue().getHostName());
+        	if (pair.getValue().getPlayer2() == null)
+        		list.addLobby(pair.getValue().getLobbySettings(), pair.getKey(), pair.getValue().getHostName());
         }
         client.send(list);
     }
