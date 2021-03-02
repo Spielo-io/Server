@@ -104,6 +104,7 @@ public class LobbyController implements Subscriber{
     public void handleLeaveMessage(ServerClient client, Message m){
         Lobby l = idLobbyMap.get(client.getID());
         idLobbyMap.remove(client.getID());
+        l.sendOtherPlayer(client.getID(), m);
         l.leave(client, codeLobbyMap);
     }
 
