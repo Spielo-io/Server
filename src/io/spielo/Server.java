@@ -9,19 +9,30 @@ import io.spielo.tasks.AcceptSocketsTask;
 import io.spielo.tasks.NotifyMessageReceived;
 import io.spielo.tasks.ReadMessagesTask;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 public class Server implements SocketConnectedEvent, SocketMessageReceived {
 	private static final int PORT = 8123;
+	
+	private static final Logger LOG = Logger.getLogger(Server.class.getName());
 
 	public static void main(String[] args) {
+		LogManager manager = LogManager.getLogManager();
+		try {
+			manager.readConfiguration(new FileInputStream("logging.properties"));
+		} catch (SecurityException | IOException e) {
+			e.printStackTrace();
+		}
+		
 		Server server = new Server(PORT);
 		server.start();
-		System.out.println("Server started on port: " + PORT);
 	}
 	
 	private short ids;
@@ -34,35 +45,38 @@ public class Server implements SocketConnectedEvent, SocketMessageReceived {
 	private final AcceptSocketsTask acceptSocketTask;
 	private final ReadMessagesTask readMessagesTask;
 	private final NotifyMessageReceived notifyMessageReceivedTask;
-	
+
 	private final ExecutorService executorMessageTask;
-	
+
 	public Server(final int port) {
 		ids = 0;
-		
+
 		ConnectedClientController clientController = new ConnectedClientController();
-		publisher = new Publisher();
 		LobbyController lobbyController = new LobbyController();
-		publisher.subscribe(lobbyController);
+
+		publisher = new Publisher();
 		publisher.subscribe(clientController);
-		
+		publisher.subscribe(lobbyController);
+
 		ServerSocket socket = createServerSocket(port);
-		
+
 		acceptSocketTask = new AcceptSocketsTask(socket, this);
 		readMessagesTask = new ReadMessagesTask(this);
+		clientController.setReadMessageTask(readMessagesTask);
 		notifyMessageReceivedTask = new NotifyMessageReceived(publisher);
-		
+
 		acceptSocketsThread = new Thread(acceptSocketTask, "Accept-Socket-Thread");
 		receiveDataThread = new Thread(readMessagesTask, "Receive-Data-Thread");
-		
+
 		executorMessageTask = Executors.newSingleThreadExecutor();
-	}	
-	
-	public final void start() {
+	}
+
+	public final void start() {	
 		acceptSocketsThread.start();
 		receiveDataThread.start();
+		LOG.info("Server started on port: " + PORT);
 	}
-	
+
 	private final ServerSocket createServerSocket(final int port) {
 		try {
 			return new ServerSocket(port);
@@ -74,6 +88,7 @@ public class Server implements SocketConnectedEvent, SocketMessageReceived {
 
 	@Override
 	public final void onSocketConnected(final Socket socket) {
+		LOG.info("New client connected.");
 		ServerClient client = new ServerClient(socket, ++ids);
 		readMessagesTask.addSocket(client);
 	}
