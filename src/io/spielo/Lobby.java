@@ -23,8 +23,9 @@ public class Lobby {
         this.lobbySettings = message.getLobbySettings();
     }
 
-    public void onPlayerJoin(ServerClient player){
+    public void onPlayerJoin(ServerClient player, String username){
         this.player2 = player;
+        this.player2Name =  username;
     }
 
     public String generateRandomCode() {
@@ -50,15 +51,20 @@ public class Lobby {
     }
 
     public void leave(ServerClient sender, Map<String, Lobby> map){
-        if(sender.getID() == host.getID()){
+        if(sender.getID() == host.getID() && player2 != null){
             host = player2;
             hostName = player2Name;
             player2 = null;
             player2Name = null;
         }
-        else if(player2 == null){
-            map.remove(this.code);
+        else if(sender.getID() == host.getID() && player2 == null){
+            map.remove(code);
         }
+        else if(sender.getID() == player2.getID()){
+            player2 = null;
+            player2Name = null;
+        }
+
     }
 
     public void editLobby(LobbySettingsMessage msg){
