@@ -42,7 +42,7 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           source: "build/libs/Server.jar"
-          target: "/home/spieloio/Server"
+          target: "/home/spieloio/Server/Server.jar"
       - name: Start Server again
         uses: appleboy/ssh-action@master
         with:
@@ -50,4 +50,3 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: /home/spieloio/Server/start.sh
-          target: "${{ secrets.REMOTE_DIR }}"
