@@ -50,5 +50,4 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: /home/spieloio/Server/start.sh
-          source: "html/"
           target: "${{ secrets.REMOTE_DIR }}"
