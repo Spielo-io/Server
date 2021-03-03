@@ -6,6 +6,7 @@ import io.spielo.messages.MessageHeader;
 import io.spielo.messages.games.TicTacToeMessage;
 import io.spielo.messages.games.Win4Message;
 import io.spielo.messages.lobby.*;
+import io.spielo.messages.server.DisconnectMessage;
 import io.spielo.messages.types.MessageType1;
 import io.spielo.messages.types.MessageType2Lobby;
 
@@ -39,15 +40,15 @@ public class LobbyController implements Subscriber{
         else if(message instanceof LobbyListRequestMessage){
             this.handleLobbyListRequest(sender, message);
         }
-        else if(message instanceof LeaveLobbyMessage){
-            System.out.println("Test");
+        else if(message instanceof LeaveLobbyMessage || message instanceof DisconnectMessage){
             this.handleLeaveMessage(sender, message);
         }
     }
 
     @Override
     public void onClientLostConnection(ServerClient sender) {
-
+        var header = new MessageHeader(sender.getID(), 0, MessageType1.LOBBY, MessageType2Lobby.LEAVE ,System.currentTimeMillis());
+        this.handleLeaveMessage(sender, new LeaveLobbyMessage(header));
     }
 
     public void handleCreateLobbyMsg(ServerClient sender, CreateLobbyMessage message) {
@@ -118,9 +119,8 @@ public class LobbyController implements Subscriber{
     public void handleLeaveMessage(ServerClient client, Message m){
         Lobby l = idLobbyMap.get(client.getID());
         idLobbyMap.remove(client.getID());
-        l.sendOtherPlayer(client.getID(), m);
+        MessageHeader header = new MessageHeader(m.getHeader().getSenderID(), m.getHeader().getReceiverID(),MessageType1.LOBBY, MessageType2Lobby.LEAVE, System.currentTimeMillis());
+        l.sendOtherPlayer(client.getID(), new LeaveLobbyMessage(header));
         l.leave(client, codeLobbyMap);
-        System.out.println(l.getHostName()+" test");
     }
-
 }
