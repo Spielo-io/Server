@@ -77,7 +77,11 @@ public class LobbyController implements Subscriber{
             lobby = codeLobbyMap.get(message.getCode());
 		}
         if(lobby == null){
-            sender.send(new JoinLobbyResponseMessage(sender.getID(), JoinLobbyResponseCode.Failed, "\0")); //failed
+            sender.send(new JoinLobbyResponseMessage(sender.getID(), JoinLobbyResponseCode.Failed, " ")); //failed
+            return;
+        }
+        if(lobby.getPlayer2() != null){
+            sender.send(new JoinLobbyResponseMessage(sender.getID(), JoinLobbyResponseCode.Failed, " "));
             return;
         }
         lobby.onPlayerJoin(sender, message.getDisplayName());
