@@ -3,6 +3,7 @@ plugins {
     id('maven-publish')
     id 'application'
     id 'maven'
+    id 'jacoco'
 }
 
 group 'io.spielo'
@@ -33,6 +34,7 @@ repositories {
         }
     }
 }
+
 sourceSets {
     main {
         java {
@@ -47,8 +49,8 @@ sourceSets {
 }
 
 dependencies {
-    implementation "io.spielo:messages:0.3.8"
-    implementation "io.spielo:client:1.0.6"
+    implementation "io.spielo:client:2.1.18"
+    implementation "io.spielo:client:2.1.18:sources"
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.1'
     testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.7.1")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.1")
@@ -62,8 +64,18 @@ test {
     filter {
         includeTestsMatching "io.spielo.*"
     }
-    reports.junitXml.destination = file("$buildDir/xml")
-    reports.html.destination = file("$buildDir/html")
+    reports.junitXml.destination = file("$buildDir/reports/JUnit/xml")
+    reports.html.destination = file("$buildDir/reports/JUnit")
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    dependsOn test // tests are required to run before generating the report
+    reports {
+        xml.enabled false
+        csv.enabled false
+        html.destination file("${buildDir}/reports/jacocoHtml")
+    }
 }
 
 application {
@@ -76,6 +88,6 @@ jar {
     }
 
     from {
-        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
 }

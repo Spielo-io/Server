@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.logging.Logger;
 
 import io.spielo.client.ServerClient;
 import io.spielo.events.SocketMessageReceived;
@@ -13,6 +14,8 @@ import io.spielo.messages.util.BufferHelper;
 
 public class ReadMessagesTask implements Runnable {
 
+	private final static Logger LOG = Logger.getLogger(ReadMessagesTask.class.getName());
+	
 	private final Lock lock;
 	private final List<ServerClient> socketsToRead;
 	private final SocketMessageReceived eventHandler;
@@ -26,6 +29,7 @@ public class ReadMessagesTask implements Runnable {
 	public final void addSocket(final ServerClient socket) {
 		lock.lock();
 		socketsToRead.add(socket);
+		LOG.info("Added socket to read. Currently reading messages from " + socketsToRead.size() + " sockets");
 		lock.unlock();
 	}
 	
@@ -34,9 +38,10 @@ public class ReadMessagesTask implements Runnable {
 		for (int i = 0; i < socketsToRead.size(); i++) {
 			if (socket == socketsToRead.get(i)) {
 				socketsToRead.remove(i);
-				return;
+				break;
 			}
 		}
+		LOG.info("Removed socket to read. Currently reading messages from " + socketsToRead.size() + " sockets");
 		lock.unlock();
 	}
 	

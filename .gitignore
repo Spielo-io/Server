@@ -14,3 +14,11 @@
 build
 .gradle
 !gradle-wrapper.jar
+
+# Eclipse settings
+.classpath
+.project
+.settings/org.eclipse.jdt.core.prefs
+
+# Ignore log folder
+/logs/
